@@ -4,7 +4,11 @@ The number of instances (x, y, z) in one direction is equal to the number of rep
 
 The cell faces at the boundaries of the original `blockMesh` grid must match in order to successfully repeat the mesh.
 
-This software was developed and tested using the [OpenFOAM-4.x](https://github.com/OpenFOAM/OpenFOAM-4.x) open source CFD toolbox from OpenFOAM Foundation.
+This software was initially developed and tested using the [OpenFOAM-4.x](https://github.com/OpenFOAM/OpenFOAM-4.x) open source CFD toolbox from OpenFOAM Foundation. Current version has been tested with:
+
+* [OpenFOAM-6](https://github.com/OpenFOAM/OpenFOAM-6)  
+* [OpenFOAM-8](https://github.com/OpenFOAM/OpenFOAM-8)  
+
 
 
 ## Usage

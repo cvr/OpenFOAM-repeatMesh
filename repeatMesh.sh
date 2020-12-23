@@ -259,6 +259,9 @@ if [ $nx -gt 1 ] ; then
             stitchMesh -overwrite -region "${rg}" \
                 -perfect stitch_east stitch_west
             _errCheck "stitchMesh failed"
+            for t in $(foamListTimes -withZero); do
+                [ -f "${t}/meshPhi" ] && rm -f "${t}"/meshPhi
+            done
             rm -rf constant/auxRegionAll
             ## translate auxRegion to have it at same position
             transformPoints -region auxRegion -translate "(${delta} 0 0)"
@@ -275,13 +278,16 @@ if [ $nx -gt 1 ] ; then
             stitchMesh -overwrite -region "${rg}" \
                 -perfect stitch_east stitch_west
             _errCheck "stitchMesh failed"
+            for t in $(foamListTimes -withZero); do
+                [ -f "${t}/meshPhi" ] && rm -f "${t}"/meshPhi
+            done
             i=$(($i + 1))
         fi
         renumberMesh -overwrite -region "${rg}"
         _errCheck "renumberMesh failed"
-        sed -i 's/stitch_east/emptyBoundary/g' \
+        sed -i 's/stitch_east/emptyBoundary'${i}'e/g' \
             constant/"${rg}"/polyMesh/boundary
-        sed -i 's/stitch_west/emptyBoundary/g' \
+        sed -i 's/stitch_west/emptyBoundary'${i}'w/g' \
             constant/"${rg}"/polyMesh/boundary
         #checkMesh
     done
@@ -319,6 +325,9 @@ if [ $ny -gt 1 ] ; then
             stitchMesh -overwrite -region "${rg}" \
                 -perfect stitch_north stitch_south
             _errCheck "stitchMesh failed"
+            for t in $(foamListTimes -withZero); do
+                [ -f "${t}/meshPhi" ] && rm -f "${t}"/meshPhi
+            done
             rm -rf constant/auxRegionAll
             ## translate auxRegion to have it at same position
             transformPoints -region auxRegion -translate "(0 ${delta} 0)"
@@ -335,13 +344,16 @@ if [ $ny -gt 1 ] ; then
             stitchMesh -overwrite -region "${rg}" \
                 -perfect stitch_north stitch_south
             _errCheck "stitchMesh failed"
+            for t in $(foamListTimes -withZero); do
+                [ -f "${t}/meshPhi" ] && rm -f "${t}"/meshPhi
+            done
             j=$(($j + 1))
         fi
         renumberMesh -overwrite -region "${rg}"
         _errCheck "renumberMesh failed"
-        sed -i 's/stitch_north/emptyBoundary/g' \
+        sed -i 's/stitch_north/emptyBoundary'${j}'n/g' \
             constant/"${rg}"/polyMesh/boundary
-        sed -i 's/stitch_south/emptyBoundary/g' \
+        sed -i 's/stitch_south/emptyBoundary'${j}'s/g' \
             constant/"${rg}"/polyMesh/boundary
         #checkMesh
     done
@@ -379,6 +391,9 @@ if [ $nz -gt 1 ] ; then
             stitchMesh -overwrite -region "${rg}" \
                 -perfect stitch_top stitch_bottom
             _errCheck "stitchMesh failed"
+            for t in $(foamListTimes -withZero); do
+                [ -f "${t}/meshPhi" ] && rm -f "${t}"/meshPhi
+            done
             rm -rf constant/auxRegionAll
             ## translate auxRegion to have it at same position
             transformPoints -region auxRegion -translate "(0 0 ${delta})"
@@ -395,13 +410,16 @@ if [ $nz -gt 1 ] ; then
             stitchMesh -overwrite -region "${rg}" \
                 -perfect stitch_top stitch_bottom
             _errCheck "stitchMesh failed"
+            for t in $(foamListTimes -withZero); do
+                [ -f "${t}/meshPhi" ] && rm -f "${t}"/meshPhi
+            done
             k=$(($k + 1))
         fi
         renumberMesh -overwrite -region "${rg}"
         _errCheck "renumberMesh failed"
-        sed -i 's/stitch_top/emptyBoundary/g' \
+        sed -i 's/stitch_top/emptyBoundary'${k}'t/g' \
             constant/"${rg}"/polyMesh/boundary
-        sed -i 's/stitch_bottom/emptyBoundary/g' \
+        sed -i 's/stitch_bottom/emptyBoundary'${k}'b/g' \
             constant/"${rg}"/polyMesh/boundary
         #checkMesh
     done
@@ -419,7 +437,11 @@ fi
 #     _errCheck "renumberMesh failed"
 # fi
 
+## clear empty patches... apparently this works
+attachMesh -overwrite
+
 checkMesh -region "${rg}"
 
-paraFoam -region "${rg}"
+#paraFoam -region "${rg}"
+#paraFoam -builtin -region "${rg}"
 
